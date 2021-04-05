@@ -15,7 +15,7 @@
                 "metrics_aggregation_interval": 300
             },
             "disk": {
-                "measurement": ["used_percent", "inodes_free"],
+                "measurement": ["used_percent", "inodes_free", "inodes_total"],
                 "metrics_collection_interval": 300,
                 "resources": ["*"]
             },
