@@ -17,7 +17,7 @@
             "disk": {
                 "measurement": ["used_percent", "inodes_free", "inodes_total"],
                 "metrics_collection_interval": 300,
-                "resources": ["*"]
+                "resources": ["/"]
             },
             "mem": {
                 "measurement": ["mem_used_percent"],
