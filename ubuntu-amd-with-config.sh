@@ -52,13 +52,13 @@ generateConfig() {
                                                     \"log_stream_name\": \"${domain}-error.log\"
                                             }," >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.d/file_amazon-cloudwatch-agent.json
 
+
             # check if the laravel log exists
-            FILE="/home/forge/$f/storage/logs/laravel.log"
-            if [ -f "$FILE" ]; then
+            if [ -d "/home/forge/$f/storage/logs" ]; then
                                                     echo "                      {
-                                                                                        \"file_path\": \"/home/forge/${domain}/storage/logs/laravel.log\",
+                                                                                        \"file_path\": \"/home/forge/${domain}/storage/logs/*.log\",
                                                                                         \"log_group_name\": \"23G/${hostname}\",
-                                                                                        \"log_stream_name\": \"${domain}-laravel-$f.log\"
+                                                                                        \"log_stream_name\": \"laravel-$f.log\"
                                                                                 }," >> /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.d/file_amazon-cloudwatch-agent.json
             fi
 
@@ -167,11 +167,24 @@ echo  '
 # Make sure files don't already exist.
 cleanupFiles
 
+ARCH=`dpkg --print-architecture`
+
+if [ "amd64" = "$ARCH" ]; then
+
 echo "Downloading..."
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg > /dev/null 2>&1
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb > /dev/null 2>&1
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb.sig > /dev/null 2>&1
 wget https://raw.githubusercontent.com/23G/forge-cloudwatch-agent/main/amazon-cloudwatch-agent.json > /dev/null 2>&1
+
+else 
+
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/assets/amazon-cloudwatch-agent.gpg > /dev/null 2>&1
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/arm64/latest/amazon-cloudwatch-agent.deb.sig > /dev/null 2>&1
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/arm64/latest/amazon-cloudwatch-agent.deb > /dev/null 2>&1
+wget https://raw.githubusercontent.com/23G/forge-cloudwatch-agent/main/amazon-cloudwatch-agent.json > /dev/null 2>&1
+
+fi
 
 # Main
 gpg --import amazon-cloudwatch-agent.gpg
